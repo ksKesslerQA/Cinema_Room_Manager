@@ -9,9 +9,58 @@ public class Cinema {
         System.out.println("Enter the number of rows:");
         int rows = scanner.nextInt();
         System.out.println("Enter the number of seats in each row:");
-        int seatsInRow = scanner.nextInt();
+        int seats = scanner.nextInt();
 
-        int totalSeats = rows * seatsInRow;
+        //print cinema scheme
+        String[][] cinema = new String[rows][seats];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < seats; j++) {
+                cinema[i][j] = "S";
+            }
+        }
+
+        printCinema(cinema);
+
+        System.out.println("\nEnter a row number:");
+        int rowSelected = scanner.nextInt();
+        System.out.println("Enter a seat number in that row:");
+        int seatSelected = scanner.nextInt();
+
+        //ticket price
+        int price = calculateTicketPrice(rows, seats, rowSelected);
+        System.out.println("\nTicket price: $" + price);
+
+
+        //print cinema scheme
+        cinema[rowSelected - 1][seatSelected - 1] = "B";
+
+        printCinema(cinema);
+    }
+        public static int calculateTicketPrice(int rows, int seats, int rowSelected) {
+            int totalSeats = rows * seats;
+            if (totalSeats <= 60) {
+                return 10;
+            }
+            int frontRows = rows / 2;
+            return rowSelected <= frontRows ? 10 : 8;
+        }
+
+        public static void printCinema(String[][] cinema) {
+            System.out.println("\nCinema:");
+            System.out.print("  ");
+            for (int i = 1; i <= cinema[0].length; i++) {  //seats
+                System.out.print(i + " ");
+            }
+            System.out.println();
+            for (int i = 0; i < cinema.length; i++) { //rows
+                System.out.print((i + 1) + " ");
+                for (int j = 0; j < cinema[i].length; j++) {
+                    System.out.print(cinema[i][j] + " ");
+                }
+                System.out.println();
+            }
+        /*
+        int totalSeats = rows * seats;
         int income;
 
         if (totalSeats <= 60){
@@ -26,6 +75,8 @@ public class Cinema {
 
         System.out.println("Total income:");
         System.out.println("$" + income);
+
+         */
 
     }
 }

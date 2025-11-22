@@ -7,31 +7,38 @@ import static cinema.CinemaApp.readInt;
 public class CinemaRoom {
     private final String[][] cinema;
     private final int rows;
-    private final int seats;
+    private final int seatsPerRow;
+    private final int totalSeats;
+    private static final int LIMIT_SEATS_SMALL_ROOM = 60;
+    private static final int PRICE_FULL = 10;
+    private static final int PRICE_DISCOUNT = 8;
     private int purchasedTickets = 0;
     private int currentIncome = 0;
 
-    public CinemaRoom(int rows, int seats) {
+
+    public CinemaRoom(int rows, int seatsPerRow) {
         this.rows = rows;
-        this.seats = seats;
-        this.cinema = new String[rows][seats];
+        this.seatsPerRow = seatsPerRow;
+        this.totalSeats = rows * seatsPerRow;
+        this.cinema = new String[rows][seatsPerRow];
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < seats; j++) {
+            for (int j = 0; j < seatsPerRow; j++) {
                 cinema[i][j] = "S";
             }
         }
+
     }
 
     public void printCinema() {
         System.out.println("\nCinema:");
         System.out.print("  ");
-        for (int i = 1; i <= seats; i++) {
+        for (int i = 1; i <= seatsPerRow; i++) {
             System.out.print(i + " ");
         }
         System.out.println();
         for (int i = 0; i < rows; i++) {
             System.out.print((i + 1) + " ");
-            for (int j = 0; j < seats; j++) {
+            for (int j = 0; j < seatsPerRow; j++) {
                 System.out.print(cinema[i][j] + " ");
             }
             System.out.println();
@@ -40,7 +47,7 @@ public class CinemaRoom {
     }
 
     public boolean isValidSeat(int row, int seat) {
-        return row >= 1 && row <= rows && seat >= 1 && seat <= seats;
+        return row >= 1 && row <= rows && seat >= 1 && seat <= seatsPerRow;
     }
 
     public void buyTicket(){
@@ -69,28 +76,25 @@ public class CinemaRoom {
     }
 
     public int calculateTicketPrice(int row) {
-        int totalSeats = rows * seats;
-        if (totalSeats <= 60) {
-            return 10;
+        if (totalSeats <= LIMIT_SEATS_SMALL_ROOM) {
+            return PRICE_FULL;
         }
         int frontRows = rows / 2;
-        return row <= frontRows ? 10 : 8;
+        return row <= frontRows ? PRICE_FULL : PRICE_DISCOUNT;
     }
 
     public int calculateTotalIncome() {
-        int totalSeats = rows * seats;
-
-        if (totalSeats <= 60) {
-            return totalSeats * 10;
+        if (totalSeats <= LIMIT_SEATS_SMALL_ROOM) {
+            return totalSeats * PRICE_FULL;
         } else {
             int frontRows = rows / 2;
             int backRows = rows - frontRows;
-            return frontRows * seats * 10 + backRows * seats * 8;
+            return frontRows * seatsPerRow * PRICE_FULL + backRows * seatsPerRow * PRICE_DISCOUNT;
         }
     }
 
     public void showStatistics() {
-        int totalSeats = rows * seats;
+
         double percentage = purchasedTickets * 100.00 / totalSeats;
 
         System.out.println("\nNumber of purchased tickets: " + purchasedTickets);
